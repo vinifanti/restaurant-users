@@ -18,6 +18,7 @@ Um grupo de restaurantes contratou o desenvolvimento de um sistema de gestão co
 | Spring Boot | 4.0.4 | Framework principal |
 | Spring Data JPA | - | Persistência de dados |
 | Spring Validation | - | Validação de entrada |
+| Spring Security Crypto | - | Criptografia de senhas (BCrypt) |
 | PostgreSQL | 17 | Banco de dados relacional |
 | Docker / Docker Compose | - | Containerização |
 | Lombok | - | Redução de código boilerplate |
@@ -36,7 +37,7 @@ Cliente / Postman / Swagger UI
            ↓
      [Controller]        → Recebe requisições HTTP, valida entrada com @Valid
            ↓
-      [Service]          → Regras de negócio (e-mail único, validação de senha, tipo de usuário)
+      [Service]          → Regras de negócio (e-mail único, validação de senha com BCrypt, tipo de usuário)
            ↓
     [Repository]         → Acesso ao banco via Spring Data JPA (Query Methods)
            ↓
@@ -70,7 +71,7 @@ users (tabela pai)
 ├── name           VARCHAR(255)  NOT NULL
 ├── email          VARCHAR(255)  NOT NULL, UNIQUE
 ├── login          VARCHAR(255)  NOT NULL
-├── password       VARCHAR(255)  NOT NULL
+├── password       VARCHAR(255)  NOT NULL  ← hash BCrypt (nunca armazenado em texto plano)
 ├── last_modified_at TIMESTAMP
 ├── street         VARCHAR(255)  (@Embeddable Address)
 ├── number         VARCHAR(255)  (@Embeddable Address)
@@ -84,6 +85,18 @@ customers (tabela filha)
 restaurant_owners (tabela filha)
 └── id             BIGINT        PK, FK → users.id
 ```
+
+---
+
+## 🔐 Segurança de Senhas
+
+As senhas dos usuários são armazenadas com hash **BCrypt** via `spring-security-crypto`. Nenhuma senha é salva em texto plano no banco de dados.
+
+| Operação | Comportamento |
+|---|---|
+| Cadastro (`POST /users`) | Senha recebida é codificada com BCrypt antes de persistir |
+| Troca de senha (`PATCH /users/{id}/password`) | Senha atual é verificada com `BCryptPasswordEncoder.matches()` e a nova é codificada |
+| Login (`POST /users/login`) | Usuário é buscado pelo login e a senha é verificada com `matches()` |
 
 ---
 

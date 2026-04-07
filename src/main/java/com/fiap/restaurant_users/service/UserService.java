@@ -9,6 +9,7 @@ import com.fiap.restaurant_users.model.RestaurantOwner;
 import com.fiap.restaurant_users.model.User;
 import com.fiap.restaurant_users.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -19,6 +20,7 @@ import java.util.List;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public UserResponse create(CreateUserRequest request) {
         if (userRepository.existsByEmail(request.email())) {
@@ -63,11 +65,11 @@ public class UserService {
     public void changePassword(Long id, ChangePasswordRequest request) {
         User user = findUserById(id);
 
-        if (!user.getPassword().equals(request.currentPassword())) {
+        if (!passwordEncoder.matches(request.currentPassword(), user.getPassword())) {
             throw new IllegalArgumentException("Senha atual incorreta");
         }
 
-        user.setPassword(request.newPassword());
+        user.setPassword(passwordEncoder.encode(request.newPassword()));
         user.setLastModifiedAt(LocalDateTime.now());
         userRepository.save(user);
     }
@@ -78,10 +80,14 @@ public class UserService {
     }
 
     public UserResponse validateLogin(LoginRequest request) {
-        return userRepository
-                .findByLoginAndPassword(request.login(), request.password())
-                .map(UserResponse::from)
+        User user = userRepository.findByLogin(request.login())
                 .orElseThrow(() -> new IllegalArgumentException("Login ou senha inválidos"));
+
+        if (!passwordEncoder.matches(request.password(), user.getPassword())) {
+            throw new IllegalArgumentException("Login ou senha inválidos");
+        }
+
+        return UserResponse.from(user);
     }
 
     private User findUserById(Long id) {
@@ -103,7 +109,7 @@ public class UserService {
         user.setName(request.name());
         user.setEmail(request.email());
         user.setLogin(request.login());
-        user.setPassword(request.password());
+        user.setPassword(passwordEncoder.encode(request.password()));
         user.setAddress(buildAddress(request.address()));
 
         return user;

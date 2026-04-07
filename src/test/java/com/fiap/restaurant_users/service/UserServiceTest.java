@@ -17,6 +17,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -32,6 +33,9 @@ class UserServiceTest {
 
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private PasswordEncoder passwordEncoder;
 
     @InjectMocks
     private UserService userService;
@@ -157,10 +161,12 @@ class UserServiceTest {
         );
 
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(passwordEncoder.matches("senha123", user.getPassword())).thenReturn(true);
+        when(passwordEncoder.encode("novaSenha456")).thenReturn("$2a$10$hashedNovaSenha");
 
         userService.changePassword(1L, request);
 
-        assertThat(user.getPassword()).isEqualTo("novaSenha456");
+        assertThat(user.getPassword()).isEqualTo("$2a$10$hashedNovaSenha");
         verify(userRepository, times(1)).save(user);
     }
 
@@ -172,6 +178,7 @@ class UserServiceTest {
         );
 
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(passwordEncoder.matches("senhaErrada", user.getPassword())).thenReturn(false);
 
         assertThatThrownBy(() -> userService.changePassword(1L, request))
                 .isInstanceOf(IllegalArgumentException.class)
@@ -185,8 +192,8 @@ class UserServiceTest {
     void deveValidarLoginComSucesso() {
         LoginRequest request = new LoginRequest("joao123", "senha123");
 
-        when(userRepository.findByLoginAndPassword("joao123", "senha123"))
-                .thenReturn(Optional.of(user));
+        when(userRepository.findByLogin("joao123")).thenReturn(Optional.of(user));
+        when(passwordEncoder.matches("senha123", user.getPassword())).thenReturn(true);
 
         UserResponse response = userService.validateLogin(request);
 
@@ -199,8 +206,8 @@ class UserServiceTest {
     void deveLancarExcecaoLoginInvalido() {
         LoginRequest request = new LoginRequest("joao123", "senhaErrada");
 
-        when(userRepository.findByLoginAndPassword("joao123", "senhaErrada"))
-                .thenReturn(Optional.empty());
+        when(userRepository.findByLogin("joao123")).thenReturn(Optional.of(user));
+        when(passwordEncoder.matches("senhaErrada", user.getPassword())).thenReturn(false);
 
         assertThatThrownBy(() -> userService.validateLogin(request))
                 .isInstanceOf(IllegalArgumentException.class)
