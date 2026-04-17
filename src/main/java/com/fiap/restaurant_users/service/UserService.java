@@ -8,20 +8,24 @@ import com.fiap.restaurant_users.model.Customer;
 import com.fiap.restaurant_users.model.RestaurantOwner;
 import com.fiap.restaurant_users.model.User;
 import com.fiap.restaurant_users.repository.UserRepository;
+import com.fiap.restaurant_users.usecase.UserUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class UserService {
+public class UserService implements UserUseCase {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    @Override
+    @Transactional
     public UserResponse create(CreateUserRequest request) {
         if (userRepository.existsByEmail(request.email())) {
             throw new IllegalArgumentException("E-mail já cadastrado");
@@ -34,11 +38,13 @@ public class UserService {
         return UserResponse.from(user);
     }
 
+    @Override
     public UserResponse findById(Long id) {
         User user = findUserById(id);
         return UserResponse.from(user);
     }
 
+    @Override
     public List<UserResponse> findByName(String name) {
         return userRepository.findByNameContainingIgnoreCase(name)
                 .stream()
@@ -46,6 +52,8 @@ public class UserService {
                 .toList();
     }
 
+    @Override
+    @Transactional
     public UserResponse update(Long id, UpdateUserRequest request) {
         if (userRepository.existsByEmail(request.email())) {
             throw new IllegalArgumentException("E-mail já cadastrado");
@@ -62,6 +70,8 @@ public class UserService {
         return UserResponse.from(user);
     }
 
+    @Override
+    @Transactional
     public void changePassword(Long id, ChangePasswordRequest request) {
         User user = findUserById(id);
 
@@ -74,20 +84,11 @@ public class UserService {
         userRepository.save(user);
     }
 
+    @Override
+    @Transactional
     public void delete(Long id) {
         User user = findUserById(id);
         userRepository.delete(user);
-    }
-
-    public UserResponse validateLogin(LoginRequest request) {
-        User user = userRepository.findByLogin(request.login())
-                .orElseThrow(() -> new IllegalArgumentException("Login ou senha inválidos"));
-
-        if (!passwordEncoder.matches(request.password(), user.getPassword())) {
-            throw new IllegalArgumentException("Login ou senha inválidos");
-        }
-
-        return UserResponse.from(user);
     }
 
     private User findUserById(Long id) {

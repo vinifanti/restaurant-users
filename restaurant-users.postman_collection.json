@@ -136,7 +136,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{base_url}}/users/login",
+									"raw": "{{base_url}}/auth/login",
 									"host": [
 										"{{base_url}}"
 									],
@@ -163,7 +163,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{base_url}}/users/login",
+									"raw": "{{base_url}}/auth/login",
 									"host": [
 										"{{base_url}}"
 									],
