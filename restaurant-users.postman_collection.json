@@ -136,12 +136,12 @@
 									}
 								},
 								"url": {
-									"raw": "{{base_url}}/users/login",
+									"raw": "{{base_url}}/auth/login",
 									"host": [
 										"{{base_url}}"
 									],
 									"path": [
-										"users",
+										"auth",
 										"login"
 									]
 								}
@@ -163,12 +163,12 @@
 									}
 								},
 								"url": {
-									"raw": "{{base_url}}/users/login",
+									"raw": "{{base_url}}/auth/login",
 									"host": [
 										"{{base_url}}"
 									],
 									"path": [
-										"users",
+										"auth",
 										"login"
 									]
 								}

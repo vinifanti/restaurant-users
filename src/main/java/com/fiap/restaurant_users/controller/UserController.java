@@ -2,10 +2,9 @@ package com.fiap.restaurant_users.controller;
 
 import com.fiap.restaurant_users.dto.request.ChangePasswordRequest;
 import com.fiap.restaurant_users.dto.request.CreateUserRequest;
-import com.fiap.restaurant_users.dto.request.LoginRequest;
 import com.fiap.restaurant_users.dto.request.UpdateUserRequest;
 import com.fiap.restaurant_users.dto.response.UserResponse;
-import com.fiap.restaurant_users.service.UserService;
+import com.fiap.restaurant_users.usecase.UserUseCase;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -28,7 +27,7 @@ import java.util.List;
 @Tag(name = "Usuários", description = "Gerenciamento de usuários do sistema")
 public class UserController {
 
-    private final UserService userService;
+    private final UserUseCase userUseCase;
 
     @Operation(summary = "Cadastrar usuário", description = "Cria um novo usuário do tipo CUSTOMER ou RESTAURANT_OWNER")
     @ApiResponses(value = {
@@ -71,7 +70,7 @@ public class UserController {
     @PostMapping
     public ResponseEntity<UserResponse> create(
             @RequestBody @Valid CreateUserRequest request) {
-        UserResponse response = userService.create(request);
+        UserResponse response = userUseCase.create(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -98,7 +97,7 @@ public class UserController {
     })
     @GetMapping("/{id}")
     public ResponseEntity<UserResponse> findById(@PathVariable Long id) {
-        UserResponse response = userService.findById(id);
+        UserResponse response = userUseCase.findById(id);
         return ResponseEntity.ok(response);
     }
 
@@ -109,7 +108,7 @@ public class UserController {
     @GetMapping("/search")
     public ResponseEntity<List<UserResponse>> findByName(
             @RequestParam String name) {
-        List<UserResponse> response = userService.findByName(name);
+        List<UserResponse> response = userUseCase.findByName(name);
         return ResponseEntity.ok(response);
     }
 
@@ -172,7 +171,7 @@ public class UserController {
     public ResponseEntity<UserResponse> update(
             @PathVariable Long id,
             @RequestBody @Valid UpdateUserRequest request) {
-        UserResponse response = userService.update(id, request);
+        UserResponse response = userUseCase.update(id, request);
         return ResponseEntity.ok(response);
     }
 
@@ -218,7 +217,7 @@ public class UserController {
     public ResponseEntity<Void> changePassword(
             @PathVariable Long id,
             @RequestBody @Valid ChangePasswordRequest request) {
-        userService.changePassword(id, request);
+        userUseCase.changePassword(id, request);
         return ResponseEntity.noContent().build();
     }
 
@@ -245,35 +244,7 @@ public class UserController {
     })
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        userService.delete(id);
+        userUseCase.delete(id);
         return ResponseEntity.noContent().build();
-    }
-
-    @Operation(summary = "Validar login", description = "Verifica se o login e senha são válidos")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Login válido"),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "Login ou senha inválidos",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ProblemDetail.class),
-                            examples = @ExampleObject(value = """
-                {
-                  "type": "https://api.restaurant.com/errors/invalid-request",
-                  "title": "Requisição inválida",
-                  "status": 400,
-                  "detail": "Login ou senha inválidos",
-                  "instance": "/api/v1/users/login"
-                }
-            """)
-                    )
-            )
-    })
-    @PostMapping("/login")
-    public ResponseEntity<UserResponse> login(
-            @RequestBody @Valid LoginRequest request) {
-        UserResponse response = userService.validateLogin(request);
-        return ResponseEntity.ok(response);
     }
 }
