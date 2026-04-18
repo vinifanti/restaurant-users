@@ -141,7 +141,7 @@
 										"{{base_url}}"
 									],
 									"path": [
-										"users",
+										"auth",
 										"login"
 									]
 								}
@@ -168,7 +168,7 @@
 										"{{base_url}}"
 									],
 									"path": [
-										"users",
+										"auth",
 										"login"
 									]
 								}
