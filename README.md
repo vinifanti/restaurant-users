@@ -92,11 +92,11 @@ restaurant_owners (tabela filha)
 
 As senhas dos usuários são armazenadas com hash **BCrypt** via `spring-security-crypto`. Nenhuma senha é salva em texto plano no banco de dados.
 
-| Operação | Comportamento |
-|---|---|
-| Cadastro (`POST /users`) | Senha recebida é codificada com BCrypt antes de persistir |
+| Operação                                      | Comportamento |
+|-----------------------------------------------|---|
+| Cadastro (`POST /users`)                      | Senha recebida é codificada com BCrypt antes de persistir |
 | Troca de senha (`PATCH /users/{id}/password`) | Senha atual é verificada com `BCryptPasswordEncoder.matches()` e a nova é codificada |
-| Login (`POST /users/login`) | Usuário é buscado pelo login e a senha é verificada com `matches()` |
+| Login (`POST /auth/login`)                      | Usuário é buscado pelo login e a senha é verificada com `matches()` |
 
 ---
 
@@ -168,15 +168,15 @@ docker compose down -v
 
 Todos os endpoints estão versionados sob o prefixo `/api/v1/users`.
 
-| Método | URL | Status | Descrição |
-|---|---|---|---|
-| `POST` | `/api/v1/users` | 201 | Cadastrar usuário |
-| `GET` | `/api/v1/users/{id}` | 200 | Buscar usuário por ID |
-| `GET` | `/api/v1/users/search?name=` | 200 | Buscar usuários por nome |
-| `PUT` | `/api/v1/users/{id}` | 200 | Atualizar dados do usuário |
+| Método | URL                           | Status | Descrição |
+|---|-------------------------------|---|---|
+| `POST` | `/api/v1/users`               | 201 | Cadastrar usuário |
+| `GET` | `/api/v1/users/{id}`          | 200 | Buscar usuário por ID |
+| `GET` | `/api/v1/users/search?name=`  | 200 | Buscar usuários por nome |
+| `PUT` | `/api/v1/users/{id}`          | 200 | Atualizar dados do usuário |
 | `PATCH` | `/api/v1/users/{id}/password` | 204 | Trocar senha (endpoint exclusivo) |
-| `DELETE` | `/api/v1/users/{id}` | 204 | Excluir usuário |
-| `POST` | `/api/v1/users/login` | 200 | Validar login e senha |
+| `DELETE` | `/api/v1/users/{id}`          | 204 | Excluir usuário |
+| `POST` | `/api/v1/auth/login`          | 200 | Validar login e senha |
 
 ### Tipos de Usuário
 
@@ -248,7 +248,7 @@ Content-Type: application/json
 
 **Request:**
 ```http
-POST /api/v1/users/login
+POST /api/v1/auth/login
 Content-Type: application/json
 
 {
