@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
-import java.util.Base64;
 import java.util.Date;
 
 @Service
@@ -21,8 +20,6 @@ public class JwtService {
 
     @Value("${jwt.expiration}")
     private long expiration;
-
-    private final String SECRET_KEY = "minha-chave-super-secreta-min-256-bits";
 
     public String generateToken(String username) {
         return Jwts.builder()
@@ -55,7 +52,20 @@ public class JwtService {
     }
 
     private Key getKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(secret);
-        return Keys.hmacShaKeyFor(keyBytes);
+        if (secret == null || secret.isEmpty()) {
+            throw new IllegalArgumentException(
+                "Propriedade 'jwt.secret' não está configurada. Configure com uma chave Base64 válida."
+            );
+        }
+
+        try {
+            byte[] keyBytes = Decoders.BASE64.decode(secret);
+            return Keys.hmacShaKeyFor(keyBytes);
+        } catch (IllegalArgumentException ex) {
+            throw new IllegalArgumentException(
+                "Propriedade 'jwt.secret' deve estar em Base64 válido. Valor recebido: " + secret,
+                ex
+            );
+        }
     }
 }

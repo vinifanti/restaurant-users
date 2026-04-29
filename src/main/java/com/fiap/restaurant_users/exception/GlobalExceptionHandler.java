@@ -55,6 +55,15 @@ public class GlobalExceptionHandler {
         return problem;
     }
 
+    @ExceptionHandler(JwtTokenException.class)
+    public ProblemDetail handleJwtToken(JwtTokenException ex) {
+        ProblemDetail problem = ProblemDetail
+                .forStatusAndDetail(HttpStatus.UNAUTHORIZED, ex.getMessage());
+        problem.setTitle("Erro na geração de token JWT");
+        problem.setType(URI.create("https://api.restaurant.com/errors/jwt-error"));
+        return problem;
+    }
+
     @ExceptionHandler(Exception.class)
     public ProblemDetail handleGeneric(Exception ex) {
         ProblemDetail problem = ProblemDetail
