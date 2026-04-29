@@ -2,7 +2,7 @@ package com.fiap.restaurant_users.service;
 
 import com.fiap.restaurant_users.dto.request.LoginRequest;
 import com.fiap.restaurant_users.dto.request.AddressRequest;
-import com.fiap.restaurant_users.dto.response.UserResponse;
+import com.fiap.restaurant_users.dto.response.AuthResponse;
 import com.fiap.restaurant_users.exception.InvalidCredentialsException;
 import com.fiap.restaurant_users.model.Customer;
 import com.fiap.restaurant_users.model.User;
@@ -31,6 +31,9 @@ class AuthServiceTest {
 
     @Mock
     private PasswordEncoder passwordEncoder;
+
+    @Mock
+    private JwtService jwtService;
 
     @InjectMocks
     private AuthService authService;
@@ -64,13 +67,18 @@ class AuthServiceTest {
         given(passwordEncoder.matches("123", "senhaCriptografada"))
                 .willReturn(true);
 
+        given(jwtService.generateToken("joao123"))
+                .willReturn("token-jwt-valido");
+
         // When
-        UserResponse response = authService.authenticate(loginRequest);
+        AuthResponse response = authService.authenticate(loginRequest);
 
         // Then
         assertNotNull(response);
+        assertEquals("token-jwt-valido", response.token());
         then(userRepository).should().findByLogin("joao123");
         then(passwordEncoder).should().matches("123", "senhaCriptografada");
+        then(jwtService).should().generateToken("joao123");
     }
 
     @Test

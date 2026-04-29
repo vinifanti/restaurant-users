@@ -1,6 +1,7 @@
 package com.fiap.restaurant_users.controller;
 
 import com.fiap.restaurant_users.dto.request.LoginRequest;
+import com.fiap.restaurant_users.dto.response.AuthResponse;
 import com.fiap.restaurant_users.dto.response.UserResponse;
 import com.fiap.restaurant_users.usecase.AuthUseCase;
 import io.swagger.v3.oas.annotations.Operation;
@@ -18,11 +19,14 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/auth")
-@RequiredArgsConstructor
 @Tag(name = "Autenticação", description = "Operações de autenticação do sistema")
 public class AuthController {
 
     private final AuthUseCase authUseCase;
+
+    public AuthController(AuthUseCase authUseCase) {
+        this.authUseCase = authUseCase;
+    }
 
     @Operation(summary = "Realizar login", description = "Autentica o usuário com login e senha")
     @ApiResponses(value = {
@@ -46,10 +50,10 @@ public class AuthController {
             )
     })
     @PostMapping("/login")
-    public ResponseEntity<UserResponse> login(
+    public ResponseEntity<AuthResponse> login(
             @RequestBody @Valid LoginRequest request) {
 
-        UserResponse response = authUseCase.authenticate(request);
+        AuthResponse response = authUseCase.authenticate(request);
         return ResponseEntity.ok(response);
     }
 }
