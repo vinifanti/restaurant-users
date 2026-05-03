@@ -22,15 +22,6 @@ public class GlobalExceptionHandler {
         return problem;
     }
 
-    @ExceptionHandler(InvalidCredentialsException.class)
-    public ProblemDetail handleInvalidCredentials(InvalidCredentialsException ex) {
-        ProblemDetail problem = ProblemDetail
-                .forStatusAndDetail(HttpStatus.UNAUTHORIZED, ex.getMessage());
-        problem.setTitle("Credenciais inválidas");
-        problem.setType(URI.create("https://api.restaurant.com/errors/unauthorized"));
-        return problem;
-    }
-
     @ExceptionHandler(ResourceNotFoundException.class)
     public ProblemDetail handleNotFound(ResourceNotFoundException ex) {
         ProblemDetail problem = ProblemDetail
@@ -52,15 +43,6 @@ public class GlobalExceptionHandler {
                 .forStatusAndDetail(HttpStatus.UNPROCESSABLE_ENTITY, detail);
         problem.setTitle("Erro de validação");
         problem.setType(URI.create("https://api.restaurant.com/errors/validation"));
-        return problem;
-    }
-
-    @ExceptionHandler(JwtTokenException.class)
-    public ProblemDetail handleJwtToken(JwtTokenException ex) {
-        ProblemDetail problem = ProblemDetail
-                .forStatusAndDetail(HttpStatus.UNAUTHORIZED, ex.getMessage());
-        problem.setTitle("Erro na geração de token JWT");
-        problem.setType(URI.create("https://api.restaurant.com/errors/jwt-error"));
         return problem;
     }
 

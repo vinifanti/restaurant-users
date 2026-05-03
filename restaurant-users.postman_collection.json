@@ -1,516 +1,409 @@
 {
-  "info": {
-    "_postman_id": "81445ffa-c85d-4504-bccc-c4c412f16694",
-    "name": "Restaurant Users API",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "53346642",
-    "_collection_link": "https://go.postman.co/collection/53346642-81445ffa-c85d-4504-bccc-c4c412f16694?source=collection_link"
-  },
-  "item": [
-    {
-      "name": "Usuario",
-      "item": [
-        {
-          "name": "Cadastro",
-          "item": [
-            {
-              "name": "Cadastro de usuário válido — CUSTOMER",
-              "request": {
-                "method": "POST",
-                "header": [],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"name\": \"João Silva\",\n  \"email\": \"joao@email.com\",\n  \"login\": \"joao123\",\n  \"password\": \"senha123\",\n  \"userType\": \"CUSTOMER\",\n  \"address\": {\n    \"street\": \"Rua das Flores\",\n    \"number\": \"123\",\n    \"city\": \"São Paulo\",\n    \"zipCode\": \"01310-100\"\n  }\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                },
-                "url": {
-                  "raw": "{{base_url}}/users",
-                  "host": [
-                    "{{base_url}}"
-                  ],
-                  "path": [
-                    "users"
-                  ]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "Cadastro de usuário válido — RESTAURANT_OWNER",
-              "request": {
-                "method": "POST",
-                "header": [],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"name\": \"Maria Santos\",\n  \"email\": \"maria@email.com\",\n  \"login\": \"maria123\",\n  \"password\": \"senha123\",\n  \"userType\": \"RESTAURANT_OWNER\",\n  \"address\": {\n    \"street\": \"Av. Paulista\",\n    \"number\": \"1000\",\n    \"city\": \"São Paulo\",\n    \"zipCode\": \"01310-200\"\n  }\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                },
-                "url": {
-                  "raw": "{{base_url}}/users",
-                  "host": [
-                    "{{base_url}}"
-                  ],
-                  "path": [
-                    "users"
-                  ]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "Cadastro inválido — e-mail duplicado",
-              "request": {
-                "method": "POST",
-                "header": [],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"name\": \"Maria Santos\",\n  \"email\": \"maria@email.com\",\n  \"login\": \"maria123\",\n  \"password\": \"senha123\",\n  \"userType\": \"RESTAURANT_OWNER\",\n  \"address\": {\n    \"street\": \"Av. Paulista\",\n    \"number\": \"1000\",\n    \"city\": \"São Paulo\",\n    \"zipCode\": \"01310-200\"\n  }\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                },
-                "url": {
-                  "raw": "{{base_url}}/users",
-                  "host": [
-                    "{{base_url}}"
-                  ],
-                  "path": [
-                    "users"
-                  ]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "Cadastro inválido — campos obrigatórios faltando",
-              "request": {
-                "method": "POST",
-                "header": [],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"name\": \"\",\n  \"email\": \"invalido\",\n  \"login\": \"\",\n  \"password\": \"\",\n  \"userType\": \"CUSTOMER\",\n  \"address\": {\n    \"street\": \"\",\n    \"number\": \"\",\n    \"city\": \"\",\n    \"zipCode\": \"\"\n  }\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                },
-                "url": {
-                  "raw": "{{base_url}}/users",
-                  "host": [
-                    "{{base_url}}"
-                  ],
-                  "path": [
-                    "users"
-                  ]
-                }
-              },
-              "response": []
-            }
-          ]
-        },
-        {
-          "name": "Login",
-          "item": [
-            {
-              "name": "Validar login — sucesso",
-              "event": [
-                {
-                  "listen": "test",
-                  "script": {
-                    "exec": [
-                      "const response = pm.response.json();\r",
-                      "\r",
-                      "pm.environment.set(\"token\", response.token);\r",
-                      ""
-                    ],
-                    "type": "text/javascript",
-                    "packages": {},
-                    "requests": {}
-                  }
-                }
-              ],
-              "request": {
-                "method": "POST",
-                "header": [],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"login\": \"joao123\",\n  \"password\": \"senha123\"\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                },
-                "url": {
-                  "raw": "{{base_url}}/auth/login",
-                  "host": [
-                    "{{base_url}}"
-                  ],
-                  "path": [
-                    "auth",
-                    "login"
-                  ]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "Validar login — inválido",
-              "request": {
-                "method": "POST",
-                "header": [],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"login\": \"joao123\",\n  \"password\": \"senhaErrada\"\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                },
-                "url": {
-                  "raw": "{{base_url}}/auth/login",
-                  "host": [
-                    "{{base_url}}"
-                  ],
-                  "path": [
-                    "auth",
-                    "login"
-                  ]
-                }
-              },
-              "response": []
-            }
-          ]
-        },
-        {
-          "name": "Busca",
-          "item": [
-            {
-              "name": "Buscar usuário por ID — sucesso",
-              "request": {
-                "auth": {
-                  "type": "bearer",
-                  "bearer": [
-                    {
-                      "key": "token",
-                      "value": "{{token}}",
-                      "type": "string"
-                    }
-                  ]
-                },
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{base_url}}/users/1",
-                  "host": [
-                    "{{base_url}}"
-                  ],
-                  "path": [
-                    "users",
-                    "1"
-                  ]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "Buscar usuário por ID — não encontrado",
-              "request": {
-                "auth": {
-                  "type": "bearer",
-                  "bearer": [
-                    {
-                      "key": "token",
-                      "value": "{{token}}",
-                      "type": "string"
-                    }
-                  ]
-                },
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{base_url}}/users/999",
-                  "host": [
-                    "{{base_url}}"
-                  ],
-                  "path": [
-                    "users",
-                    "999"
-                  ]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "Buscar usuários por nome",
-              "request": {
-                "auth": {
-                  "type": "bearer",
-                  "bearer": [
-                    {
-                      "key": "token",
-                      "value": "{{token}}",
-                      "type": "string"
-                    }
-                  ]
-                },
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{base_url}}/users/search?name=João",
-                  "host": [
-                    "{{base_url}}"
-                  ],
-                  "path": [
-                    "users",
-                    "search"
-                  ],
-                  "query": [
-                    {
-                      "key": "name",
-                      "value": "João"
-                    }
-                  ]
-                }
-              },
-              "response": []
-            }
-          ]
-        },
-        {
-          "name": "Atualização",
-          "item": [
-            {
-              "name": "Atualizar dados — sucesso",
-              "request": {
-                "auth": {
-                  "type": "bearer",
-                  "bearer": [
-                    {
-                      "key": "token",
-                      "value": "{{token}}",
-                      "type": "string"
-                    }
-                  ]
-                },
-                "method": "PUT",
-                "header": [],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"name\": \"João Silva Atualizado\",\n  \"email\": \"joao.atualizado@email.com\",\n  \"login\": \"joao456\",\n  \"address\": {\n    \"street\": \"Rua das Rosas\",\n    \"number\": \"456\",\n    \"city\": \"Campinas\",\n    \"zipCode\": \"13010-100\"\n  }\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                },
-                "url": {
-                  "raw": "{{base_url}}/users/1",
-                  "host": [
-                    "{{base_url}}"
-                  ],
-                  "path": [
-                    "users",
-                    "1"
-                  ]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "Atualizar dados — usuário não encontrado",
-              "request": {
-                "auth": {
-                  "type": "bearer",
-                  "bearer": [
-                    {
-                      "key": "token",
-                      "value": "{{token}}",
-                      "type": "string"
-                    }
-                  ]
-                },
-                "method": "PUT",
-                "header": [],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"name\": \"João Silva Atualizado\",\n  \"email\": \"joao.atualizado2@email.com\",\n  \"login\": \"joao456\",\n  \"address\": {\n    \"street\": \"Rua das Rosas\",\n    \"number\": \"456\",\n    \"city\": \"Campinas\",\n    \"zipCode\": \"13010-100\"\n  }\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                },
-                "url": {
-                  "raw": "{{base_url}}/users/999",
-                  "host": [
-                    "{{base_url}}"
-                  ],
-                  "path": [
-                    "users",
-                    "999"
-                  ]
-                }
-              },
-              "response": []
-            }
-          ]
-        },
-        {
-          "name": "Senha",
-          "item": [
-            {
-              "name": "Trocar senha — sucesso",
-              "request": {
-                "auth": {
-                  "type": "bearer",
-                  "bearer": [
-                    {
-                      "key": "token",
-                      "value": "{{token}}",
-                      "type": "string"
-                    }
-                  ]
-                },
-                "method": "PATCH",
-                "header": [],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"currentPassword\": \"senha123\",\n  \"newPassword\": \"novaSenha456\"\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                },
-                "url": {
-                  "raw": "{{base_url}}/users/1/password",
-                  "host": [
-                    "{{base_url}}"
-                  ],
-                  "path": [
-                    "users",
-                    "1",
-                    "password"
-                  ]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "Trocar senha — senha atual incorreta",
-              "request": {
-                "auth": {
-                  "type": "bearer",
-                  "bearer": [
-                    {
-                      "key": "token",
-                      "value": "{{token}}",
-                      "type": "string"
-                    }
-                  ]
-                },
-                "method": "PATCH",
-                "header": [],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"currentPassword\": \"senhaErrada\",\n  \"newPassword\": \"novaSenha456\"\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                },
-                "url": {
-                  "raw": "{{base_url}}/users/1/password",
-                  "host": [
-                    "{{base_url}}"
-                  ],
-                  "path": [
-                    "users",
-                    "1",
-                    "password"
-                  ]
-                }
-              },
-              "response": []
-            }
-          ]
-        },
-        {
-          "name": "Exclusão",
-          "item": [
-            {
-              "name": "Excluir usuário — sucesso",
-              "request": {
-                "auth": {
-                  "type": "bearer",
-                  "bearer": [
-                    {
-                      "key": "token",
-                      "value": "{{token}}",
-                      "type": "string"
-                    }
-                  ]
-                },
-                "method": "DELETE",
-                "header": [],
-                "url": {
-                  "raw": "{{base_url}}/users/1",
-                  "host": [
-                    "{{base_url}}"
-                  ],
-                  "path": [
-                    "users",
-                    "1"
-                  ]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "Excluir usuário — não encontrado",
-              "request": {
-                "auth": {
-                  "type": "bearer",
-                  "bearer": [
-                    {
-                      "key": "token",
-                      "value": "{{token}}",
-                      "type": "string"
-                    }
-                  ]
-                },
-                "method": "DELETE",
-                "header": [],
-                "url": {
-                  "raw": "{{base_url}}/users/999",
-                  "host": [
-                    "{{base_url}}"
-                  ],
-                  "path": [
-                    "users",
-                    "999"
-                  ]
-                }
-              },
-              "response": []
-            }
-          ]
-        }
-      ]
-    }
-  ]
+	"info": {
+		"_postman_id": "5ee4ebbb-08f7-44e7-b4bf-e450df2aabac",
+		"name": "Restaurant Users API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "20615086"
+	},
+	"item": [
+		{
+			"name": "Usuario",
+			"item": [
+				{
+					"name": "Cadastro",
+					"item": [
+						{
+							"name": "Cadastro de usuário válido — CUSTOMER",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"João Silva\",\n  \"email\": \"joao@email.com\",\n  \"login\": \"joao123\",\n  \"password\": \"senha123\",\n  \"userType\": \"CUSTOMER\",\n  \"address\": {\n    \"street\": \"Rua das Flores\",\n    \"number\": \"123\",\n    \"city\": \"São Paulo\",\n    \"zipCode\": \"01310-100\"\n  }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/users",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"users"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Cadastro de usuário válido — RESTAURANT_OWNER",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"Maria Santos\",\n  \"email\": \"maria@email.com\",\n  \"login\": \"maria123\",\n  \"password\": \"senha123\",\n  \"userType\": \"RESTAURANT_OWNER\",\n  \"address\": {\n    \"street\": \"Av. Paulista\",\n    \"number\": \"1000\",\n    \"city\": \"São Paulo\",\n    \"zipCode\": \"01310-200\"\n  }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/users",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"users"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Cadastro inválido — e-mail duplicado",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"Maria Santos\",\n  \"email\": \"maria@email.com\",\n  \"login\": \"maria123\",\n  \"password\": \"senha123\",\n  \"userType\": \"RESTAURANT_OWNER\",\n  \"address\": {\n    \"street\": \"Av. Paulista\",\n    \"number\": \"1000\",\n    \"city\": \"São Paulo\",\n    \"zipCode\": \"01310-200\"\n  }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/users",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"users"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Cadastro inválido — campos obrigatórios faltando",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"\",\n  \"email\": \"invalido\",\n  \"login\": \"\",\n  \"password\": \"\",\n  \"userType\": \"CUSTOMER\",\n  \"address\": {\n    \"street\": \"\",\n    \"number\": \"\",\n    \"city\": \"\",\n    \"zipCode\": \"\"\n  }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/users",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"users"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Login",
+					"item": [
+						{
+							"name": "Validar login — sucesso",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"login\": \"joao123\",\n  \"password\": \"senha123\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/users/login",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"users",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Validar login — inválido",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"login\": \"joao123\",\n  \"password\": \"senhaErrada\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/users/login",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"users",
+										"login"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Busca",
+					"item": [
+						{
+							"name": "Buscar usuário por ID — sucesso",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/users/1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"users",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Buscar usuário por ID — não encontrado",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/users/999",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"users",
+										"999"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Buscar usuários por nome",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/users/search?name=João",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"users",
+										"search"
+									],
+									"query": [
+										{
+											"key": "name",
+											"value": "João"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Atualização",
+					"item": [
+						{
+							"name": "Atualizar dados — sucesso",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"João Silva Atualizado\",\n  \"email\": \"joao.atualizado@email.com\",\n  \"login\": \"joao456\",\n  \"address\": {\n    \"street\": \"Rua das Rosas\",\n    \"number\": \"456\",\n    \"city\": \"Campinas\",\n    \"zipCode\": \"13010-100\"\n  }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/users/1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"users",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Atualizar dados — usuário não encontrado",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"João Silva Atualizado\",\n  \"email\": \"joao.atualizado2@email.com\",\n  \"login\": \"joao456\",\n  \"address\": {\n    \"street\": \"Rua das Rosas\",\n    \"number\": \"456\",\n    \"city\": \"Campinas\",\n    \"zipCode\": \"13010-100\"\n  }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/users/999",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"users",
+										"999"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Senha",
+					"item": [
+						{
+							"name": "Trocar senha — sucesso",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"currentPassword\": \"senha123\",\n  \"newPassword\": \"novaSenha456\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/users/1/password",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"users",
+										"1",
+										"password"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Trocar senha — senha atual incorreta",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"currentPassword\": \"senhaErrada\",\n  \"newPassword\": \"novaSenha456\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/users/1/password",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"users",
+										"1",
+										"password"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Exclusão",
+					"item": [
+						{
+							"name": "Excluir usuário — sucesso",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/users/1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"users",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Excluir usuário — não encontrado",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/users/999",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"users",
+										"999"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	]
 }

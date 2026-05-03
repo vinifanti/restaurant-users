@@ -188,6 +188,33 @@ class UserServiceTest {
     }
 
     @Test
+    @DisplayName("Deve validar login com sucesso")
+    void deveValidarLoginComSucesso() {
+        LoginRequest request = new LoginRequest("joao123", "senha123");
+
+        when(userRepository.findByLogin("joao123")).thenReturn(Optional.of(user));
+        when(passwordEncoder.matches("senha123", user.getPassword())).thenReturn(true);
+
+        UserResponse response = userService.validateLogin(request);
+
+        assertThat(response).isNotNull();
+        assertThat(response.login()).isEqualTo("joao123");
+    }
+
+    @Test
+    @DisplayName("Deve lançar exceção ao validar login inválido")
+    void deveLancarExcecaoLoginInvalido() {
+        LoginRequest request = new LoginRequest("joao123", "senhaErrada");
+
+        when(userRepository.findByLogin("joao123")).thenReturn(Optional.of(user));
+        when(passwordEncoder.matches("senhaErrada", user.getPassword())).thenReturn(false);
+
+        assertThatThrownBy(() -> userService.validateLogin(request))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Login ou senha inválidos");
+    }
+
+    @Test
     @DisplayName("Deve deletar usuário com sucesso")
     void deveDeletarUsuarioComSucesso() {
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
